@@ -1,0 +1,41 @@
+{% extends '_base.html' %}
+
+{% block container %}
+<div class="container">
+
+    <div class="row mt-5 mb-5">
+        <div class="col-0 col-md-3">
+            Name
+        </div>
+        <div class="col-0 col-md-3">
+            Birth Year
+        </div>
+        <div class="col-0 col-md-3">
+            Homeworld
+        </div>
+        <div class="col-0 col-md-3">
+            date
+        </div>
+    </div>
+
+    {% for d in data %}
+    <div class="row mt-2 mb-2">
+        <div class="col-0 col-md-3">
+            {{ d.name }}
+        </div>
+        <div class="col-0 col-md-3">
+<!--            <span style="white-space: pre-wrap;">{{ d.birth_year | rjust:"6" }}</span>-->
+            {{ d.birth_year }}
+        </div>
+        <div class="col-0 col-md-3">
+            {{ d.homeworld }}
+        </div>
+        <div class="col-0 col-md-3">
+            {{ d.edited | date:"Y-m-d" }}
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock container %}
