@@ -24,7 +24,7 @@
             {{ d.name }}
         </div>
         <div class="col-0 col-md-3">
-<!--            <span style="white-space: pre-wrap;">{{ d.birth_year | rjust:"6" }}</span>-->
+<!--            <span style="white-space: pre-wrap;">{{ d.birth_year | rjust:"7" }}</span>-->
             {{ d.birth_year }}
         </div>
         <div class="col-0 col-md-3">
@@ -36,6 +36,10 @@
     </div>
     {% endfor %}
 
+
+    <div class="m-5">{{document}}</div>
 </div>
+
+
 
 {% endblock container %}
