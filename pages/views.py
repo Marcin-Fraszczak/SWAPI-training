@@ -2,28 +2,37 @@ import csv
 from datetime import datetime
 from pprint import pprint
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import View
-from . import functions
-
-fetch_keys = ["people", "planets", "films", "species", "vehicles", "starships"]
+from . import functions, models
 
 
 class HomePageView(View):
     def get(self, request):
-        document = functions.get_page(fetch_keys[0])
-        reader = csv.reader(document)
-        for row in reader:
-            pprint(row, indent=4)
+        return render(request, 'collections/homepage.html')
 
-        # data = functions.get_data(fetch_keys[0]).get("results")[:2]
-        # pprint(data, indent=4)
-        # for d in data:
-        #     d["edited"] = d["edited"].split("T")[0]
-            # d["edited"] = datetime.fromisoformat(d["edited"])
-            # d["homeworld"] = (functions.get_single_record_api(d["homeworld"])).get("name")
+
+class CollectionView(View):
+    def get(self, request, category):
+
+        if category > 6:
+            category = 6
+        elif category < 1:
+            category = 1
+
+        if "pk" in request.GET:
+            collections = get_object_or_404(models.Collection, pk=request.GET.get("pk"))
+
+            ctx = {
+                "collections": collections,
+            }
+            return render(request, 'collections/show_collection.html', ctx)
+        elif "fetch" in request.GET:
+            functions.get_people()
+
+        collections = models.Collection.objects.filter(category=category).order_by('-created')
 
         ctx = {
-            "document": document,
+            "collections": collections,
         }
-        return render(request, 'pages/homepage.html', ctx)
+        return render(request, 'collections/collections_list.html', ctx)

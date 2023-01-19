@@ -3,6 +3,7 @@
 venv
 .idea/
 env/.env
+static/csv/
 
 ### Django ###
 *.log

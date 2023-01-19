@@ -5,7 +5,7 @@ from . import views
 app_name = 'pages'
 
 urlpatterns = [
-    path('', views.HomePageView.as_view(), name='homepage'),
-
+    path('', views.HomePageView.as_view(), name='home'),
+    path('collection/<int:category>/', views.CollectionView.as_view(), name='collection'),
 ]
 
