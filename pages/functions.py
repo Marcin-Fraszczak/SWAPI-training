@@ -18,14 +18,14 @@ def handler(category):
 
 def get_people():
     def add_page(data):
-        df = pd.json_normalize(data, record_path=['results'])
-        df['last_edited'] = pd.to_datetime(df['edited'], errors='coerce', infer_datetime_format=True).dt.strftime('%Y-%m-%d')
-        df = df[["name", "birth_year", "homeworld", "last_edited"]]
+        df = pd.json_normalize(data)
+        df['edited'] = pd.to_datetime(df['edited'], errors='coerce', infer_datetime_format=True).dt.strftime('%Y-%m-%d')
+        df = df[["name", "birth_year", "homeworld", "edited"]]
         return pd.concat([people, df])
 
-    people = pd.DataFrame(columns=["name", "birth_year", "homeworld", "last_edited"])
+    people = pd.DataFrame()
     page = handler("people")
-    people = add_page(page)
+    people = add_page(page.get("results"))
     next_page = page.get("next", None)
     while next_page:
         response = requests.get(next_page)
@@ -38,7 +38,6 @@ def get_people():
     people = people.drop(columns=["name_y", "url"])
 
     filename = f'{int(time.mktime(time.gmtime()))}_people.csv'
-    # filename = f'{datetime.now().strftime("%Y_%m_%d_%H_%M_%S")}.csv'
     path = Path(f'static/csv/people/{filename}')
     people.to_csv(path, index=False)
     models.Collection.objects.create(
@@ -49,13 +48,13 @@ def get_people():
 
 def get_planets():
     def add_page(page):
-        df = pd.json_normalize(page, record_path=["results"])
+        df = pd.json_normalize(page)
         df = df[["name", "url"]]
         return pd.concat([planets, df])
 
     planets = pd.DataFrame(columns=["name", "url"])
     page = handler("planets")
-    planets = add_page(page)
+    planets = add_page(page.get("results"))
     next_page = page.get("next", None)
     while next_page:
         response = requests.get(next_page)
