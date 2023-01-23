@@ -8,6 +8,19 @@ from pathlib import Path
 
 from . import models
 
+CATEGORIES = {
+    1: "people",
+    2: "planets",
+    3: "films",
+    4: "species",
+    5: "vehicles",
+    6: "starships",
+}
+used_cols = {
+    1: ["name", "birth_year", "homeworld", "edited"],
+    2: ["name", "url", "residents"],
+}
+
 
 def handler(category):
     response = requests.get('https://swapi.dev/api/')
@@ -16,49 +29,52 @@ def handler(category):
     return response.json()
 
 
-def get_people():
+def get_data(category):
     def add_page(data):
         df = pd.json_normalize(data)
-        df['edited'] = pd.to_datetime(df['edited'], errors='coerce', infer_datetime_format=True).dt.strftime('%Y-%m-%d')
-        df = df[["name", "birth_year", "homeworld", "edited"]]
-        return pd.concat([people, df])
+        return pd.concat([result, df[used_cols.get(category)]])
 
-    people = pd.DataFrame()
-    page = handler("people")
-    people = add_page(page.get("results"))
+    result = pd.DataFrame(columns=used_cols.get(category))
+    page = handler(CATEGORIES.get(category))
+    result = add_page(page.get("results"))
     next_page = page.get("next", None)
     while next_page:
         response = requests.get(next_page)
-        people = add_page(response.json())
+        result = add_page(response.json().get("results"))
         next_page = response.json().get("next", None)
 
-    planets = get_planets()
+    # print(result)
+    return result
+
+
+def transform_people(people):
+    if not people.shape[0]:
+        return pd.DataFrame(columns=used_cols.get(1))
+
+    people['edited'] = pd.to_datetime(people['edited'], errors='coerce',
+                                      infer_datetime_format=True).dt.strftime('%Y-%m-%d')
+    planets = get_data(2)
+    planets.rename(columns={"name": "pl_name"}, inplace=True)
     people = pd.merge(people, planets, left_on="homeworld", right_on="url")
-    people["homeworld"] = people["name_y"]
-    people = people.drop(columns=["name_y", "url"])
+    people["homeworld"] = people["pl_name"]
+    people = people.drop(columns=["pl_name", "url", "residents"])
 
-    filename = f'{int(time.mktime(time.gmtime()))}_people.csv'
-    path = Path(f'static/csv/people/{filename}')
-    people.to_csv(path, index=False)
-    models.Collection.objects.create(
-        category=1,
-        filename=filename,
-    )
+    return people
 
 
-def get_planets():
-    def add_page(page):
-        df = pd.json_normalize(page)
-        df = df[["name", "url"]]
-        return pd.concat([planets, df])
 
-    planets = pd.DataFrame(columns=["name", "url"])
-    page = handler("planets")
-    planets = add_page(page.get("results"))
-    next_page = page.get("next", None)
-    while next_page:
-        response = requests.get(next_page)
-        planets = add_page(response.json())
-        next_page = response.json().get("next", None)
 
-    return planets
+
+
+
+
+
+
+    # planets = get_planets()
+    # people = pd.merge(people, planets, left_on="homeworld", right_on="url")
+    # people["homeworld"] = people["name_y"]
+    # people = people.drop(columns=["name_y", "url"])
+
+# filename = f'{int(time.mktime(time.gmtime()))}_people.csv'
+# path = Path(f'static/csv/people/{filename}')
+# people.to_csv(path, index=False)
