@@ -2,6 +2,7 @@ import csv
 from datetime import datetime
 from pprint import pprint
 
+import pandas as pd
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from . import functions, models
@@ -16,10 +17,15 @@ class CollectionView(View):
     def get(self, request, category):
 
         if "pk" in request.GET:
-            collections = get_object_or_404(models.Collection, pk=request.GET.get("pk"))
+            collection = get_object_or_404(models.Collection, pk=request.GET.get("pk"))
+            filepath = functions.get_path(collection)
+            df = pd.read_csv(filepath_or_buffer=filepath)
+            df.index += 1
+            df = df.to_html(justify="center")
 
             ctx = {
-                "collections": collections,
+                "collection": collection,
+                "df": df,
             }
             return render(request, 'collections/show_collection.html', ctx)
 
@@ -27,7 +33,7 @@ class CollectionView(View):
             df = functions.get_data(category)
             if category == 1:
                 people_df = functions.transform_people(df)
-                print(people_df)
+                functions.write_csv(people_df, category)
 
             return redirect("pages:collection", category=category)
 

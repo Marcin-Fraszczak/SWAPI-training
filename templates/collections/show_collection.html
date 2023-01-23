@@ -2,6 +2,16 @@
 
 {% block container %}
 <div class="m-5">
-    <div class="display-6 d-inline">{{ collections.filename }}</div>
+    <div class="display-6 mb-3">{{ collection.filename }}</div>
+    <a class="btn btn-dark text-white text-decoration-none" id="show-less"
+       href="#">Show less</a>
+    <a class="btn btn-dark text-white text-decoration-none" id="show-more"
+       href="#">Show more</a>
 </div>
+
+
+<div class="m-5">
+    {{ df | safe }}
+</div>
+
 {% endblock container %}

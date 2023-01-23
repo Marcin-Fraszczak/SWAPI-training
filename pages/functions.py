@@ -1,6 +1,7 @@
 import csv
 import time
 
+import numpy as np
 import requests
 from pprint import pprint
 import pandas as pd
@@ -62,19 +63,17 @@ def transform_people(people):
     return people
 
 
+def write_csv(df, category):
+    cat_name = CATEGORIES.get(category)
+    filename = f'{cat_name}_{int(time.mktime(time.gmtime()))}.csv'
+    path = Path(f'static/csv/{cat_name}/{filename}')
+    df.to_csv(path, index=False)
+    models.Collection.objects.create(
+        category=category,
+        filename=filename,
+    )
 
 
-
-
-
-
-
-
-    # planets = get_planets()
-    # people = pd.merge(people, planets, left_on="homeworld", right_on="url")
-    # people["homeworld"] = people["name_y"]
-    # people = people.drop(columns=["name_y", "url"])
-
-# filename = f'{int(time.mktime(time.gmtime()))}_people.csv'
-# path = Path(f'static/csv/people/{filename}')
-# people.to_csv(path, index=False)
+def get_path(collection):
+    cat_name = CATEGORIES.get(collection.category)
+    return Path(f'static/csv/{cat_name}/{collection.filename}')
