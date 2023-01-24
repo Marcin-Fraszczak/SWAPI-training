@@ -6,11 +6,16 @@
     <a class="btn btn-dark text-white text-decoration-none" id="show-less"
        href="#">Show less</a>
     <a class="btn btn-dark text-white text-decoration-none" id="show-more"
-       href="#">Show more</a>
+       href="#">Show more</a><br>
+    <div class="mt-3" id="columns-buttons">
+        <span>show / hide columns:&nbsp&nbsp</span>
+        {% for col in columns %}
+        <a href="#" class="btn btn-warning" id="{{ col }}">{{ col }}</a>
+        {% endfor %}
+    </div>
 </div>
 
-
-<div class="m-5">
+<div class="custom-scrollbar m-5" style="overflow-y: auto; overflow-x: hidden; max-height: 65vh">
     {{ df | safe }}
 </div>
 

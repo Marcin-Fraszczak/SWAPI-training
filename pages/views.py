@@ -21,11 +21,13 @@ class CollectionView(View):
             filepath = functions.get_path(collection)
             df = pd.read_csv(filepath_or_buffer=filepath)
             df.index += 1
+            columns = list(df.columns)
             df = df.to_html(justify="center")
 
             ctx = {
                 "collection": collection,
                 "df": df,
+                "columns": columns,
             }
             return render(request, 'collections/show_collection.html', ctx)
 
