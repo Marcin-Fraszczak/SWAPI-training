@@ -4,15 +4,21 @@
 <div class="m-5">
     <div class="display-6 d-inline">Available collections</div>
     <a class="btn btn-dark text-white text-decoration-none m-3"
-       href="{% url 'pages:collection' category %}?fetch=1">Fetch new</a>
+       href="{% url 'pages:collection' category %}?fetch=1" id="fetch-button">Fetch new</a>
     <div class="display-7 mb-3">You can choose from any of previously saved collections or download the latest one.
     </div>
 
-    {% for c in collections %}
-    <a href="{% url 'pages:collection' c.category %}?pk={{ c.pk }}">{{ c.created }}</a><br>
-    {% empty %}
-    <div>Nothing to display here yet. Click "Fetch new" button.</div>
-    {% endfor %}
+    <div class="custom-scrollbar" style="overflow-y: auto; overflow-x: hidden; max-height: 60vh">
+        {% for c in collections %}
+        <a href="{% url 'pages:collection' c.category %}?pk={{ c.pk }}">{{ c.created }}</a><br>
+        {% empty %}
+        <div>Nothing to display here yet. Click "Fetch new" button.</div>
+        {% endfor %}
+    </div>
 
+</div>
+
+<div id="wait-message">
+    This should take a couple of seconds, depending on the internet connection.
 </div>
 {% endblock container %}

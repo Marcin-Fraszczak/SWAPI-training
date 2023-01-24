@@ -33,9 +33,13 @@ class CollectionView(View):
 
         elif "fetch" in request.GET:
             df = functions.get_data(category)
+
             if category == 1:
-                people_df = functions.transform_people(df)
-                functions.write_csv(people_df, category)
+                df = functions.transform_people(df)
+            elif category == 2:
+                df = functions.transform_planets(df)
+
+            functions.write_csv(df, category)
 
             return redirect("pages:collection", category=category)
 

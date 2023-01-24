@@ -18,8 +18,9 @@ CATEGORIES = {
     6: "starships",
 }
 used_cols = {
-    1: ["name", "birth_year", "homeworld", "edited"],
+    1: ["name", "birth_year", "homeworld", "edited", "films", "height"],
     2: ["name", "url", "residents"],
+    3: ["url", "title"]
 }
 
 
@@ -30,14 +31,18 @@ def handler(category):
     return response.json()
 
 
-def get_data(category):
+def get_data(category, columns=None):
     def add_page(data):
         df = pd.json_normalize(data)
-        return pd.concat([result, df[used_cols.get(category)]])
+        return pd.concat([result, df[columns]], ignore_index=True)
 
-    result = pd.DataFrame(columns=used_cols.get(category))
+    if not columns:
+        columns = used_cols.get(category)
+    result = pd.DataFrame(columns=columns)
     page = handler(CATEGORIES.get(category))
+
     result = add_page(page.get("results"))
+
     next_page = page.get("next", None)
     while next_page:
         response = requests.get(next_page)
@@ -54,13 +59,32 @@ def transform_people(people):
 
     people['edited'] = pd.to_datetime(people['edited'], errors='coerce',
                                       infer_datetime_format=True).dt.strftime('%Y-%m-%d')
-    planets = get_data(2)
+    planets = get_data(2, columns=["name", "url"])
     planets.rename(columns={"name": "pl_name"}, inplace=True)
     people = pd.merge(people, planets, left_on="homeworld", right_on="url")
     people["homeworld"] = people["pl_name"]
     people = people.drop(columns=["pl_name", "url", "residents"])
 
+    films = get_data(3)
+    film_dict = {films.loc[i]["url"]: films.loc[i]["title"] for i in range(len(films))}
+    for i in range(len(people["films"])):
+        people["films"][i] = ", ".join([film_dict.get(film) for film in people["films"][i]])
+
     return people
+
+
+def transform_planets(planets):
+    if not planets.shape[0]:
+        return pd.DataFrame(columns=used_cols.get(2))
+
+    people = get_data(1, columns=["name", "url"])
+
+    people_dict = {people["url"][i]: people["name"][i] for i in range(len(people))}
+    for i in range(len(planets["residents"])):
+        planets["residents"][i] = ", ".join([people_dict.get(resident) for resident in planets["residents"][i]])
+    planets = planets.drop(columns=["url"])
+
+    return planets
 
 
 def write_csv(df, category):

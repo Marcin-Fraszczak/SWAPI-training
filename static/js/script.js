@@ -1,6 +1,7 @@
 const df = document.querySelector(".dataframe");
+const fetchButton = document.querySelector("#fetch-button");
 
-
+// Only for single collection view
 if (df) {
     let show = 10;
     let more = 10;
@@ -83,5 +84,12 @@ if (df) {
     showMoreButton.addEventListener("click", e => showMore(more));
     colButtonsContainer.addEventListener("click", e => updateColButtons(e));
     showRows();
+}
 
+// Only for collections list view
+if (fetchButton) {
+    const msgContainer = document.querySelector("#wait-message");
+    fetchButton.addEventListener("click", e => {
+        msgContainer.style.display = "block";
+    });
 }

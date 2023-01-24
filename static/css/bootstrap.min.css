@@ -12238,3 +12238,18 @@ thead > tr > th {
     top: 0;
     z-index: 1020;
 }
+
+#wait-message {
+    z-index: 99;
+    position: fixed;
+    text-align: center;
+    max-width: 80vw;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    border: 1px solid #c52828;
+    background: lightgrey;
+    border: 1px solid #000;
+    display: none;
+}
