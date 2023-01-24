@@ -22,7 +22,7 @@ class CollectionView(View):
             df = pd.read_csv(filepath_or_buffer=filepath)
             df.index += 1
             columns = list(df.columns)
-            df = df.to_html(justify="center")
+            df = df.to_html(justify="center", na_rep="")
 
             ctx = {
                 "collection": collection,
@@ -38,6 +38,12 @@ class CollectionView(View):
                 df = functions.transform_people(df)
             elif category == 2:
                 df = functions.transform_planets(df)
+            elif category == 4:
+                df = functions.transform_species(df)
+            elif category == 5:
+                df = functions.transform_vehicles(df)
+            elif category == 6:
+                df = functions.transform_starships(df)
 
             functions.write_csv(df, category)
 
