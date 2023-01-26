@@ -1,7 +1,3 @@
-import csv
-from datetime import datetime
-from pprint import pprint
-
 import pandas as pd
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View

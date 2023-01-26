@@ -1,9 +1,5 @@
-import csv
 import time
-
-import numpy as np
 import requests
-from pprint import pprint
 import pandas as pd
 from pathlib import Path
 
