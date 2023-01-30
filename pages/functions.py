@@ -107,7 +107,6 @@ def write_csv(df, category):
     cat_name = CATEGORIES.get(category)
     filename = f'{cat_name}_{int(time.mktime(time.gmtime()))}.csv'
     path = os.path.join(STATIC_ROOT, f'csv/{cat_name}/{filename}')
-    # path = Path(f'static/csv/{cat_name}/{filename}')
     df.to_csv(path, index=False)
     models.Collection.objects.create(
         category=category,
@@ -120,4 +119,3 @@ def get_path(collection):
     path = os.path.join(STATIC_ROOT,
                         f'csv/{cat_name}/{collection.filename}')
     return path
-    # return Path(f'static/csv/{cat_name}/{collection.filename}')
