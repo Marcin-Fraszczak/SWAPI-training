@@ -9,6 +9,8 @@ echo Migrations prepared...
 migrate=$`python manage.py migrate`
 echo Migrations done...
 flush=$`python manage.py flush --no-input`
+#echo Collecting staticfiles...
+#static=$`python manage.py collectstatic --no-input`
 dirs=("people" "planets" "films" "species" "vehicles" "starships")
 for dir in "${dirs[@]}"
 do
@@ -16,8 +18,8 @@ do
 done
 #echo Populating database...
 #script=$`python scripts.py > log.txt`
-#echo Running tests...
-#test=$`pytest >> log.txt`
-#echo All the information saved to log.txt
+echo Running tests...
+test=$`pytest > log.txt`
+echo All the information saved to log.txt
 echo Open your browser and visit this address: http://127.0.0.1:8000/
 run=$`python manage.py runserver`

@@ -35,15 +35,15 @@ That will run the script, which does the following:
 - prepares and runs migrations (database file is created in main directory)
 - flushes the database, in case script is run for the second time
 - runs django development server, by default at http://127.0.0.1:8000/
+- creates directories for storing csv files
+- tests code with pytest
+- saves all the above info to `log.txt` file in the main directory
+
 
 [//]: # (- populates the database with starting data:)
 [//]: # (    - one user)
 [//]: # (    - one superuser)
 [//]: # (    - couple of instances of all the necessary models)
-[//]: # (- tests code with pytest)
-
-
-[//]: # (- saves all the above info with details, passwords, test coverage, etc. to `log.txt` file in the main directory)
 
 
 ### In case you run this script multiple times without killing the previous process, you'll get `port already in use` message
