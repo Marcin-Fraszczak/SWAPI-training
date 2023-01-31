@@ -2,7 +2,6 @@ import os
 import time
 import requests
 import pandas as pd
-from pathlib import Path
 
 from config.settings import STATIC_ROOT
 from . import models

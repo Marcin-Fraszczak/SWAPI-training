@@ -6,6 +6,7 @@ from pages.models import Collection
 from pages.functions import CATEGORIES
 
 
+@pytest.mark.full
 @pytest.mark.django_db
 def test_full_program_people(client):
     i = 1
