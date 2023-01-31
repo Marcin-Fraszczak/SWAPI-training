@@ -1,3 +1,4 @@
+echo "=================================================================="
 echo Initializing bash script...
 location=$(which bash)
 #! $location
@@ -16,10 +17,20 @@ for dir in "${dirs[@]}"
 do
   make_dir=$`mkdir -p staticfiles/csv/"$dir"`
 done
-#echo Populating database...
-#script=$`python scripts.py > log.txt`
-echo Running tests...
-test=$`pytest > log.txt`
+echo Unit tests take 5 seconds. Full program test takes 2 minutes.
+read -p 'Do you want to run full test [yes/NO]: ' command
+command=${command:-NO}
+if [ $command == 'yes' ]
+then
+  echo Running full tests...
+  test=$`pytest > log.txt`
+else
+  echo Running unit tests only...
+  test=$`pytest -m "not full" > log.txt`
+fi
+echo "-----------------------------------------------------------------"
 echo All the information saved to log.txt
+echo "-----------------------------------------------------------------"
 echo Open your browser and visit this address: http://127.0.0.1:8000/
 run=$`python manage.py runserver`
+echo "=================================================================="
