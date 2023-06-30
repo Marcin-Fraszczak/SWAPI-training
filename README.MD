@@ -144,18 +144,17 @@ Bash script for config, database setup, testing and starting the server (see the
 
 # How to run it locally:
 
-1. Fork the repository
-2. Clone the repository to your local machine, for example:
-   `git clone <your_repo_url>`
-3. Inside the project folder, create and activate virtual environment, for example for virtualenv:
+1. Clone the repository to your local machine, for example:
+   `git clone https://github.com/Marcin-Fraszczak/SWAPI-training.git`
+2. Inside the project folder, create and activate virtual environment, for example for virtualenv:
 
-`virtualenv -p python3.11 venv`
+`python -m venv venv`
 
 and then
 
 `source venv/bin/activate`
 
-4. In the main project folder (where manage.py is located), with virtual environment activated, use command:
+3. In the main project folder (where manage.py is located), with virtual environment activated, use command:
 
 `bash start.sh`
 
